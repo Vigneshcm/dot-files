@@ -88,6 +88,23 @@ echo "✅ 3-finger drag gesture enabled"
 install_apps \
     handbrake 
     unachiver
+    figma
+    qbittorrent
+    Framer
+    logi-options-plus
+    AdBlock
+    Raycast
+    texts
+    cron
+    visual-studio-code
+    spotify
+    Notion
+    Obsidian
+    whatsapp
+    zoom
+    slack
+    discord
+    
     
   
 
