@@ -12,8 +12,12 @@ else
 fi
 
 # Section 2: Install applications via Homebrew
+echo "Updating Homebrew..."
+brew update
+
 echo "Installing applications..."
 
+# Installing applications via Homebrew Cask
 brew install --cask amie
 brew install --cask figma
 brew install --cask framer
@@ -25,6 +29,9 @@ brew install --cask texts
 brew install --cask raycast
 brew install --cask discord
 brew install --cask slack
+
+echo "Applications installed successfully."
+
 
 # Section 3: macOS Preferences
 
