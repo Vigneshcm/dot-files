@@ -1,116 +1,79 @@
-#!/bin/sh
+#!/bin/bash
 
-# 1. Setup development environment
-# 2. Tweak macOS preferences
-# 3. Install apps
+echo "Starting setup for your design environment..."
 
+# Section 1: Install Homebrew if not installed
+if ! command -v brew &> /dev/null
+then
+    echo "Homebrew not found. Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    echo "Homebrew is already installed."
+fi
 
-# Function to install brew packages
-install_packages() {
-  for pkg in "$@"; do
-    brew install "$pkg"
-    if [ $? -eq 0 ]; then
-      echo "✅ $pkg installed"
-      echo "--------------------"
-    else
-      echo "❌ Failed to install $pkg"
-      echo "--------------------"
-    fi
-  done
-}
+# Section 2: Install applications via Homebrew
+echo "Installing applications..."
 
-# Function to install macOS apps with brew cask
-install_apps() {
-  for app in "$@"; do
-    brew install --cask "$app"
-    if [ $? -eq 0 ]; then
-      echo "✅ $app installed"
-      echo "--------------------"
-    else
-      echo "❌ Failed to install $app"
-      echo "--------------------"
-    fi
-  done
-}
+brew install --cask amie
+brew install --cask figma
+brew install --cask framer
+brew install --cask obsidian
+brew install --cask arc
+brew install --cask logi-options-plus
+brew install --cask spotify
+brew install --cask texts
+brew install --cask raycast
+brew install --cask discord
+brew install --cask slack
 
-####################################
-# 1. Setup development environment 
-####################################
+# Section 3: macOS Preferences
 
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# Create .zprofile and add Homebrew to it
-touch ~/.zprofile
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/vigneshcm/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-echo '✅ brew installed'
-echo "--------------------\n"
+# 1. Clear all dock items
+echo "Clearing dock items..."
+defaults write com.apple.dock persistent-apps -array
+killall Dock
 
-# Install NVM (Not supported via Homebrew)
-curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh" | zsh
+# 2. Automatically hide and show menu bar
+echo "Setting menu bar to auto-hide..."
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# 3. Enable dark mode
+echo "Enabling dark mode..."
+osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
 
-echo "✅ nvm installed"
+# 4. Disable Spotlight shortcut (Command + Space)
+echo "Disabling Spotlight shortcut (Command + Space)..."
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "<dict><key>enabled</key><false/></dict>"
 
-# Install Node and NPM (latest and LTS)
-nvm install node
-nvm install --lts
+# 5. Set trackpad speed to 7
+echo "Setting trackpad speed to maximum..."
+defaults write -g com.apple.trackpad.scaling 3.0
 
+# 6. Enable Tap to Click
+echo "Enabling Tap to Click..."
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-####################################
-# 2. Tweak macOS Preferences
-####################################
+# 7. Look up and data detectors - Tap with three fingers
+echo "Setting Look Up to Tap with three fingers..."
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture -int 2
 
-# Remove login message in Apple Terminal
-touch ~/.hushlogin
-
-# Tweak macOS preferences
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-echo "✅ Disabled automatic spelling correction"
-
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-echo "✅ Disabled automatic capitalization"
-
-defaults write com.apple.menuextra.battery ShowPercent -bool true
-echo "✅ Battery percentage display enabled"
-
+# 8. Enable three-finger drag for trackpad
+echo "Enabling three-finger drag..."
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
-echo "✅ 3-finger drag gesture enabled"
+defaults write com.apple.AppleMultitouchTrackpad TrackpadDragging -bool true
 
+# 9. Enable accessibility setting: Use trackpad for dragging, Dragging style: three-finger drag
+echo "Enabling three-finger drag in Accessibility settings..."
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DraggingStyle -string "threeFingerDrag"
 
-####################################
-# 3. Install apps  
-####################################
+# Section 4: Apply changes
+echo "Applying all changes..."
 
-install_apps \
-    handbrake 
-    unachiver
-    figma
-    qbittorrent
-    Framer
-    logi-options-plus
-    AdBlock
-    Raycast
-    texts
-    cron
-    visual-studio-code
-    spotify
-    Notion
-    Obsidian
-    whatsapp
-    zoom
-    slack
-    discord
-    
-    
-  
+# Restart Dock and other services to apply changes
+killall Dock
+killall SystemUIServer
 
-
-
-
-
-
-
+echo "Setup complete!"
