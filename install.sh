@@ -42,7 +42,12 @@ killall Dock
 
 # 2. Automatically hide and show menu bar
 echo "Setting menu bar to auto-hide..."
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
+
+# Enable auto-hide for the menu bar using AppleScript
+osascript -e 'tell application "System Events" to tell appearance preferences to set autohide menu bar to true'
+
+echo "Menu bar auto-hide set."
+
 
 # 3. Enable dark mode
 echo "Enabling dark mode..."
@@ -50,7 +55,15 @@ osascript -e 'tell application "System Events" to tell appearance preferences to
 
 # 4. Disable Spotlight shortcut (Command + Space)
 echo "Disabling Spotlight shortcut (Command + Space)..."
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "<dict><key>enabled</key><false/></dict>"
+
+# Disable Command + Space for Spotlight
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+
+# Restart SystemUIServer to apply changes
+killall SystemUIServer
+
+echo "Spotlight shortcut disabled."
 
 # 5. Set trackpad speed to 7
 echo "Setting trackpad speed to maximum..."
