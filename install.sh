@@ -73,7 +73,8 @@ check_status "Disabling Spotlight shortcut (Command + Space)"
 
 # 5. Set trackpad speed to 7
 echo "Setting trackpad speed to maximum..."
-defaults write -g com.apple.trackpad.scaling 3.0
+defaults write -g com.apple.trackpad.scaling -float 2.0 && killall SystemUIServer
+
 check_status "Setting trackpad speed"
 
 # 6. Enable Tap to Click
@@ -105,6 +106,17 @@ echo "Applying all changes..."
 killall Dock
 killall SystemUIServer
 check_status "Restarting Dock and SystemUIServer"
+
+#Section 5: Dock settings
+echo "Changing dock settings"
+defaults write com.apple.dock magnification -bool true && \
+defaults write com.apple.dock largesize -int 48 && \
+defaults write com.apple.dock tilesize -int 36 && \
+defaults write com.apple.dock autohide -bool true && \
+killall Dock && killall SystemUIServer
+
+
+
 
 echo "Setup complete!"
 
