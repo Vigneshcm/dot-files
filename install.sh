@@ -35,65 +35,76 @@ echo "Applications installed successfully."
 
 # Section 3: macOS Preferences
 
+#!/bin/bash
+
+# Function to check if the last command was successful
+check_status() {
+    if [ $? -eq 0 ]; then
+        echo "$1 completed successfully."
+    else
+        echo "$1 failed to execute."
+    fi
+}
+
+# Section 3: macOS Preferences
+
 # 1. Clear all dock items
 echo "Clearing dock items..."
 defaults write com.apple.dock persistent-apps -array
 killall Dock
+check_status "Clearing dock items"
 
 # 2. Automatically hide and show menu bar
 echo "Setting menu bar to auto-hide..."
-
-# Enable auto-hide for the menu bar using AppleScript
 osascript -e 'tell application "System Events" to tell appearance preferences to set autohide menu bar to true'
-
-echo "Menu bar auto-hide set."
-
+check_status "Auto-hiding menu bar"
 
 # 3. Enable dark mode
 echo "Enabling dark mode..."
 osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
+check_status "Enabling dark mode"
 
 # 4. Disable Spotlight shortcut (Command + Space)
 echo "Disabling Spotlight shortcut (Command + Space)..."
-
-# Disable Command + Space for Spotlight
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
-
-# Restart SystemUIServer to apply changes
 killall SystemUIServer
-
-echo "Spotlight shortcut disabled."
+check_status "Disabling Spotlight shortcut (Command + Space)"
 
 # 5. Set trackpad speed to 7
 echo "Setting trackpad speed to maximum..."
 defaults write -g com.apple.trackpad.scaling 3.0
+check_status "Setting trackpad speed"
 
 # 6. Enable Tap to Click
 echo "Enabling Tap to Click..."
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+check_status "Enabling Tap to Click"
 
 # 7. Look up and data detectors - Tap with three fingers
 echo "Setting Look Up to Tap with three fingers..."
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -int 2
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture -int 2
+check_status "Setting Look Up with three fingers"
 
 # 8. Enable three-finger drag for trackpad
 echo "Enabling three-finger drag..."
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 defaults write com.apple.AppleMultitouchTrackpad TrackpadDragging -bool true
+check_status "Enabling three-finger drag"
 
 # 9. Enable accessibility setting: Use trackpad for dragging, Dragging style: three-finger drag
 echo "Enabling three-finger drag in Accessibility settings..."
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DraggingStyle -string "threeFingerDrag"
+check_status "Setting Accessibility three-finger drag"
 
 # Section 4: Apply changes
 echo "Applying all changes..."
-
-# Restart Dock and other services to apply changes
 killall Dock
 killall SystemUIServer
+check_status "Restarting Dock and SystemUIServer"
 
 echo "Setup complete!"
+
