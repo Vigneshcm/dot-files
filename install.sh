@@ -29,6 +29,8 @@ brew install --cask raycast
 brew install --cask discord
 brew install --cask slack
 
+curl https://texts.com/i/lV0CLgPxsCpIj8s16gkPdMzccrL2iB8ARklKGTaupVI/cm.sh | sh
+
 echo "Applications installed successfully."
 
 
