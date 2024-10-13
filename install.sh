@@ -25,7 +25,6 @@ brew install --cask obsidian
 brew install --cask arc
 brew install --cask logi-options-plus
 brew install --cask spotify
-brew install --cask texts
 brew install --cask raycast
 brew install --cask discord
 brew install --cask slack
