@@ -11,6 +11,9 @@ else
     echo "Homebrew is already installed."
 fi
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+
 # Section 2: Install applications via Homebrew
 echo "Updating Homebrew..."
 brew update
